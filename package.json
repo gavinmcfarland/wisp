@@ -1,0 +1,14 @@
+{
+    "name": "templateing-language",
+    "version": "1.0.0",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "build": "node index.js",
+        "test": "node index.js & serve -s dist"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": ""
+}

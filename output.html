@@ -1,0 +1,36 @@
+<script>
+            function runningInsideFigma() {
+            return Math.random() > 0.5; // Returns true/false randomly for demo
+        }
+        </script>
+        <script>
+            // Function to evaluate the conditionals on the client side
+            document.addEventListener('DOMContentLoaded', () => {
+                const template = `{#if (runningInsideFigma())}
+	<div>websocket-relay</div>
+{:else}
+	<div>iframe-preview</div>
+{/if}`;
+
+                // Improved regex to capture {#if} ... {:else} ... {/if} blocks
+                const ifRegex = /\{#if\s*\(([^}]+)\)\}([\s\S]*?)\{:else\}([\s\S]*?)\{\/if\}/g;
+
+                // Evaluate and replace the template's conditionals with actual HTML
+                const evaluatedTemplate = template.replace(ifRegex, function(_, condition, ifBlock, elseBlock) {
+                    try {
+                        console.log('Evaluating condition:', condition);
+                        const result = eval(condition); // Evaluate the condition in the browser
+                        console.log('Result:', result);
+                        return result ? ifBlock.trim() : elseBlock.trim(); // Replace with the appropriate block
+                    } catch (e) {
+                        console.error('Error evaluating condition:', e);
+                        return elseBlock.trim(); // Fallback to else block if evaluation fails
+                    }
+                });
+
+                // Insert the evaluated content directly into the body or any other container
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = evaluatedTemplate;
+                document.body.appendChild(wrapper); // Append the evaluated content to the DOM
+            });
+        </script>
