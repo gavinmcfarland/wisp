@@ -18,7 +18,7 @@ Use logic blocks in your templates to dynamically include different content at r
   }
 </script>
 
-{#if (runningInsideFigma())}
+{#if (showGreeting())}
     <p>Hello!</p>
     {:else}
     <p>Goodbye!</p>
