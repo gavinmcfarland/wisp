@@ -29,12 +29,39 @@ export function renderInclude(inputString, baseDir = path.resolve('./')) {
 		}
 	};
 
-	// Perform the replacement synchronously for all include statements
-	const matches = [...inputString.matchAll(includeRegex)];
+	// Replace includes in main content
+	const replaceMainIncludes = (inputString) => {
+		const matches = [...inputString.matchAll(includeRegex)];
 
-	for (const match of matches) {
-		inputString = inputString.replace(match[0], replaceIncludes(...match));
-	}
+		for (const match of matches) {
+			inputString = inputString.replace(match[0], replaceIncludes(...match));
+		}
+		return inputString;
+	};
+
+	// Replace includes inside script tags
+	const replaceScriptIncludes = (inputString) => {
+		const scriptRegex = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
+		return inputString.replace(scriptRegex, (scriptTag, scriptContent) => {
+			// Find all include statements inside the script content
+			const matches = [...scriptContent.matchAll(includeRegex)];
+
+			for (const match of matches) {
+				const includedContent = replaceIncludes(...match);
+				// Replace include statement with the actual content
+				scriptContent = scriptContent.replace(match[0], includedContent);
+			}
+
+			// Return the updated script tag with the processed content
+			return `<script>${scriptContent}</script>`;
+		});
+	};
+
+	// First, process the main HTML content
+	inputString = replaceMainIncludes(inputString);
+
+	// Then, process the script tags separately
+	inputString = replaceScriptIncludes(inputString);
 
 	return inputString;
 }
