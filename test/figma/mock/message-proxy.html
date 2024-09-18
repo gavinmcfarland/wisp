@@ -6,6 +6,8 @@
   }
 </script>
 
+{include("content-filter.html") | uppercase}
+
 <!-- svelte-ignore missing-declaration -->
 {#if isRunningInFigmaUI()}
   {include("websocket-relay.html")}

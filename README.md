@@ -41,9 +41,9 @@ The example below uses reactive logic blocks to dynamically update content at ru
 <button onclick="changeGreeting()">Change greeting</button>
 
 {#if showGreeting}
-    {include('hello.html')}
+    { include('hello.html') }
 {:else}
-    {include('goodbye.html')}
+    { include('goodbye.html') }
 {/if}
 ```
 
@@ -60,7 +60,7 @@ The example below uses reactive logic blocks to dynamically update content at ru
 - `includes`: Content can be split into files for better organisation.
 
   ```html
-  {include('about.html')}
+  { include('about.html') }
   ```
 
 - `rendered`: This only applies the code contained after the template has been rendered. <mark>experimental</mark>
@@ -71,3 +71,20 @@ The example below uses reactive logic blocks to dynamically update content at ru
             console.log(iframe)
         {/rendered}
     </script>
+
+- `helpers`: Create your own helpers
+
+    ```html
+    <p>Copyright { thisYear() }</p>
+    ```
+
+    They can be pipped as well.
+
+    ```html
+    <p>{ 'hello world' | uppercase}</p>
+    ```
+
+    ```html
+    <p>{ include('script.html') | escape }
+    ```
+
