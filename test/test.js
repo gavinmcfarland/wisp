@@ -9,7 +9,7 @@ import { wisp } from 'wisp'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const templateStringPath = path.join(__dirname, 'test/template-string.html');
+const templateStringPath = path.join(__dirname, 'template-string.html');
 const baseDir = path.join(__dirname, 'test');  // The base directory where files will be searched
 
 const dirPath = path.join(__dirname, 'dist');

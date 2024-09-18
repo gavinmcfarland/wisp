@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node test/test.js",
-    "test": "node test/test.js & serve -s dist"
+    "test": "node test/test.js & serve -s test/dist"
   },
   "exports": {
     ".": "./index.js"
