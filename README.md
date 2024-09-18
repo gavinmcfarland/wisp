@@ -20,6 +20,9 @@ The example below uses reactive logic blocks to dynamically update content at ru
 
 <button onclick="changeGreeting()">Change greeting</button>
 
-{#if showGreeting} {include('hello.html')} {:else} {include('goodbye.html')}
+{#if showGreeting}
+    {include('hello.html')}
+    {:else}
+    {include('goodbye.html')}
 {/if}
 ```

@@ -2,7 +2,9 @@
 	let showGreeting = true;
 
 	function changeGreeting() {
-		showGreeting = !showGreeting
+		setInterval(() => {
+			showGreeting = !showGreeting
+		}, 1000)
 	}
 </script>
 
