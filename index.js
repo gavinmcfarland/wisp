@@ -77,12 +77,14 @@ class Wisp {
 
 		// Step 2: Normalize the path and check if it exists
 		const normalizedPath = path.normalize(str);
+		console.log(normalizedPath)
 		try {
 			const stats = fs.statSync(normalizedPath);
 			// Step 3: Check if it's a file (you can also check for directories with stats.isDirectory())
 			return stats.isFile();
 		} catch (err) {
 			// If an error is thrown (e.g., the path doesn't exist), return false
+			throw new Error(`Template path does not exist: ${str}`);
 			return false;
 		}
 	}

@@ -13,7 +13,7 @@ export function renderInclude(inputString, baseDir = path.resolve('./')) {
 
 	// Regular expression to find { include('file-name.html') } with optional spaces
 	const includeRegex = new RegExp(
-		`${escapedStart}\\s*include\\s*\\(\\s*'(.+?)'\\s*\\)\\s*${escapedEnd}`,
+		`${escapedStart}\\s*include\\s*\\(\\s*['"](.+?)['"]\\s*\\)\\s*${escapedEnd}`,
 		'g'
 	);
 
