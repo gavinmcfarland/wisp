@@ -84,6 +84,8 @@ The example below uses reactive logic blocks to dynamically update content at ru
     <p>{ 'hello world' | uppercase}</p>
     ```
 
+    And applied to files.
+
     ```html
     <p>{ include('script.html') | escape }
     ```
