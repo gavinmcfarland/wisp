@@ -5,32 +5,24 @@ A lightweight templating language for HTML.
 > [!NOTE]
 > This is a work in progress and very experimental.
 
-### Usage
+### Example
 
-#### Logic blocks
-
-Use logic blocks in your templates to dynamically include different content at runtime.
+The example below uses reactive logic blocks to dynamically update content at runtime. Content changes automatically when triggered by events, and 'includes' are used to reference external content for better modularity.
 
 ```html
 <script>
-  function showGreeting() {
-    return Math.random() > 0.5; // Returns true/false randomly for demo
+  let showGreeting = true
+
+  function changeGreeting() {
+    showGreeting = !showGreeting
   }
 </script>
 
-{#if (showGreeting())}
-    <p>Hello!</p>
+<button onclick="changeGreeting()">Change greeting</button>
+
+{#if showGreeting}
+    {include('hello.html')}
     {:else}
-    <p>Goodbye!</p>
+    {include('goodbye.html')}
 {/if}
-```
-
-#### Inlcudes
-
-Include content from different files.
-
-```html
-{include('header.html')}
-<main>Main content</main>
-{include('footer.html')}
 ```

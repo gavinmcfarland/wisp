@@ -1,9 +1,22 @@
 import fs from 'fs';
 import path from 'path';
 
+// Configure the start and end delimiters
+let startDelimiter = '<%';
+let endDelimiter = '%>';
+
 export function renderInclude(inputString, baseDir) {
-	// Regular expression to find {include('file-name.html')}
-	const includeRegex = /\{include\('(.+?)'\)\}/g;
+
+	// Escape delimiters for use in regular expressions
+	const escapeRegex = (str) => str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+	const escapedStart = escapeRegex(startDelimiter);
+	const escapedEnd = escapeRegex(endDelimiter);
+
+	// Regular expression to find { include('file-name.html') } with optional spaces
+	const includeRegex = new RegExp(
+		`${escapedStart}\\s*include\\s*\\(\\s*'(.+?)'\\s*\\)\\s*${escapedEnd}`,
+		'g'
+	);
 
 	// Replace each include statement with the content of the corresponding file synchronously
 	const replaceIncludes = (match, includeFile) => {

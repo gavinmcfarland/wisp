@@ -1,6 +1,7 @@
 import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import fs from 'fs'
 
 import { renderLogicBlock } from './src/renderLogicBlock.js'
 import { renderInclude } from './src/renderInclude.js'
@@ -41,19 +42,24 @@ const filePath = path.join(dirPath, 'index.html');
 // <div>Main content here</div>
 // {include('footer.html')}`;
 
-const templateString = `
-<script>
-        function runningInsideFigma() {
-            return Math.random() > 0.5; // Returns true/false randomly for demo
-        }
-</script>
+// const templateString = `
+// <script>
+//         function runningInsideFigma() {
+//             return Math.random() > 0.5; // Returns true/false randomly for demo
+//         }
+// </script>
 
-{#if (runningInsideFigma())}
-	{include('header.html')}
-{:else}
-	{include('footer.html')}
-{/if}
-`;
+// {#if runningInsideFigma()}
+// 	<% include('header.html') %>
+// {:else}
+// 	<% include('footer.html') %>
+// {/if}
+// `;
+
+
+const templateStringPath = path.join(__dirname, 'test/template-string.html');
+
+const templateString = fs.readFileSync(templateStringPath, 'utf8');
 
 const baseDir = path.join(__dirname, 'test');  // The base directory where files will be searched
 

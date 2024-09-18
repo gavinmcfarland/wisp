@@ -1,0 +1,15 @@
+<script>
+	let showGreeting = true;
+
+	function changeGreeting() {
+		showGreeting = !showGreeting
+	}
+</script>
+
+<button onclick="changeGreeting()">Change greeting</button>
+
+{#if showGreeting}
+<p>Hello!</p>
+{:else}
+<p>Goodbye!</p>
+{/if}
