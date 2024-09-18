@@ -1,11 +1,16 @@
-<iframe id="plugma-app-iframe"></iframe>
-
 <script>
-	// Write to iframe so that Vite app can be mounted
 	let iframe = document.getElementById("plugma-app-iframe");
-	console.log("--- iframe", iframe, "Timestamp:", Date.now());
+
+	if (iframe) {
+		let doc = iframe.contentWindow.document;
+		doc.open();
+		doc.write(`{include('vite-app.html')}`);
+		doc.close();
+	}
 
 </script>
+
+<iframe id="plugma-app-iframe"></iframe>
 
 <style>
 	#plugma-app-iframe {

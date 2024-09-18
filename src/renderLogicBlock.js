@@ -9,25 +9,46 @@ export function renderLogicBlock(templateString) {
 	const escapedStart = escapeRegex(startDelimiter);
 	const escapedEnd = escapeRegex(endDelimiter);
 
-	// Updated Regex for matching {#if condition} ... {:else} ... {/if} with configurable delimiters
+	// Regex for matching {#if condition} ... {:else} ... {/if} with configurable delimiters
 	const ifRegex = new RegExp(
 		`${escapedStart}#if\\s*([^${escapedEnd}]+)${escapedEnd}([\\s\\S]*?)${escapedStart}:else${escapedEnd}([\\s\\S]*?)${escapedStart}/if${escapedEnd}`,
 		'g'
 	);
 
-	// Extract scripts and template
+	// Regex for matching {#rendered} ... {/rendered} blocks and their contents
+	// FIXME: Rendered tag is a bit experimental. Like it's only relly applicable to js, and I don't think it solves the core problem
+	const renderedRegex = new RegExp(
+		`${escapedStart}#rendered${escapedEnd}([\\s\\S]*?)${escapedStart}/rendered${escapedEnd}`,
+		'g'
+	);
+
+	// Extract scripts and template content
 	let clientScript = '';
 	let templateContent = templateString;
+	let renderedBlocks = [];
 
 	// Find all script tags in the template and extract them
 	const scriptMatches = templateString.match(/<script>([\s\S]*?)<\/script>/g);
 	if (scriptMatches) {
 		scriptMatches.forEach((script) => {
-			clientScript += script.replace(/<\/?script>/g, '') + '\n';
-			console.log("clientScript", clientScript)
+			let scriptContent = script.replace(/<\/?script>/g, ''); // Remove <script> tags
+
+			// Remove {#rendered} blocks and their contents from the clientScript and store them
+			scriptContent = scriptContent.replace(renderedRegex, (match, renderedBlock) => {
+				renderedBlocks.push(renderedBlock); // Store the rendered block for later execution
+				return ''; // Remove it from the script content
+			});
+
+			clientScript += scriptContent + '\n';
 			templateContent = templateContent.replace(script, ''); // Remove script from template
 		});
 	}
+
+	// Remove {#rendered} blocks and their contents from the template content
+	templateContent = templateContent.replace(renderedRegex, (match, renderedBlock) => {
+		renderedBlocks.push(renderedBlock); // Store the rendered block for later execution
+		return ''; // Remove it from the template content
+	});
 
 	// Process clientScript to replace variable declarations with reactive variables
 	const variableDeclarationRegex = /(let|var|const)\s+(\w+)\s*=\s*(.*?);/g;
@@ -44,7 +65,6 @@ export function renderLogicBlock(templateString) {
 	// Prepare the output string that will be sent to the client
 	const output = `
         <script>
-            // Define reactiveVar function and variables first
             (function() {
                 function reactiveVar(name, initialValue) {
                     let value = initialValue;
@@ -58,19 +78,15 @@ export function renderLogicBlock(templateString) {
                     });
                 }
 
-                // Process the variable declarations upfront so they're ready
                 ${processedClientScript.trim()}
 
-                // Delimiters
                 const startDelimiter = ${JSON.stringify(startDelimiter)};
                 const endDelimiter = ${JSON.stringify(endDelimiter)};
 
-                // Escape delimiters for use in regular expressions
                 const escapeRegex = (str) => str.replace(/[-/\\\\^$*+?.()|[\\]{}]/g, '\\\\$&');
                 const escapedStart = escapeRegex(startDelimiter);
                 const escapedEnd = escapeRegex(endDelimiter);
 
-                // Updated regex to capture {#if} ... {:else} ... {/if} blocks with configurable delimiters
                 const ifRegex = new RegExp(
                     escapedStart + '#if\\\\s*([^' + escapedEnd + ']+)' + escapedEnd +
                     '([\\\\s\\\\S]*?)' +
@@ -80,13 +96,11 @@ export function renderLogicBlock(templateString) {
                     'g'
                 );
 
-                const template = \`${templateContent.trim()}\`;
+                let template = \`${templateContent.trim()}\`;
 
-                // Define render function
                 function render() {
-                    console.log("Rendering template...");
 
-                    // Evaluate and replace the template's conditionals with actual HTML
+                    // Replace if conditionals with the corresponding blocks
                     const evaluatedTemplate = template.replace(ifRegex, function(_, condition, ifBlock, elseBlock) {
                         try {
                             const result = eval(condition); // Evaluate the condition in the current context
@@ -97,19 +111,19 @@ export function renderLogicBlock(templateString) {
                         }
                     });
 
-                    // Update the content in the DOM
+                    // Create a wrapper if not already created
                     if (!render.wrapper) {
                         render.wrapper = document.createElement('div');
                         document.body.appendChild(render.wrapper);
                     }
                     render.wrapper.innerHTML = evaluatedTemplate;
 
-                    // Ensure the script is only added once
+					// Ensure the script is only added once
                     if (!document.getElementById("dynamic-script")) {
                         const scriptElement = document.createElement('script');
-                        scriptElement.textContent = ${clientScript.trim()};
+						// Add back both the clientScripts and the renderedBlocks
+                        scriptElement.textContent = ${clientScript.trim() + '\n' + renderedBlocks.join('\n')};
                         scriptElement.id = "dynamic-script"; // Add an id to the script element to avoid duplicate insertion
-                        console.log("Inserting script element...");
                         document.body.appendChild(scriptElement);
                     }
                 }

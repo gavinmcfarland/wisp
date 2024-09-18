@@ -40,7 +40,10 @@ The example below uses reactive logic blocks to dynamically update content at ru
 
 <button onclick="changeGreeting()">Change greeting</button>
 
-{#if showGreeting} {include('hello.html')} {:else} {include('goodbye.html')}
+{#if showGreeting}
+    {include('hello.html')}
+{:else}
+    {include('goodbye.html')}
 {/if}
 ```
 
@@ -59,3 +62,12 @@ The example below uses reactive logic blocks to dynamically update content at ru
   ```html
   {include('about.html')}
   ```
+
+- `rendered`: This only applies the code contained after the template has been rendered. <mark>experimental</mark>
+
+    ```html
+    <script>
+        {#rendered}
+            console.log(iframe)
+        {/rendered}
+    </script>
