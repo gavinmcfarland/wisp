@@ -1,79 +1,69 @@
 import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import fs from 'fs'
+import fs from 'fs';
 
-import { renderLogicBlock } from './src/renderLogicBlock.js'
-import { renderInclude } from './src/renderInclude.js'
+import { renderLogicBlock } from './src/renderLogicBlock.js';
+import { renderInclude } from './src/renderInclude.js';
 
 // Write to file
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const dirPath = path.join(__dirname, 'dist');
-const filePath = path.join(dirPath, 'index.html');
+class Wisp {
+	constructor() {
+		// Placeholder function, to be replaced with your own logic
+		this.placeholderFunction = (content, baseDir) => {
+			const renderedIncludes = renderInclude(content, baseDir);
+			const output = renderLogicBlock(renderedIncludes);
+			return output;
+		};
+	}
 
-// try {
-// 	const output = renderInclude(templateString, baseDir);
-// 	console.log(output);
-// } catch (err) {
-// 	console.error(err.message);
-// }
+	// Async method to render content, accepts either a string or a file path
+	async render(content, baseDir) {
+		if (typeof content === 'string') {
+			// If content is a string, check if it's a file path
+			if (this.isFilePath(content)) {
+				try {
+					// Read the file if it's a valid path
+					const fileContent = await this.readFile(content);
+					return this.placeholderFunction(fileContent, baseDir);
+				} catch (error) {
+					console.error("Error reading file:", error);
+					throw error;
+				}
+			} else {
+				// If it's just a string, pass it directly to the placeholder function
+				return this.placeholderFunction(content, baseDir);
+			}
+		} else {
+			throw new Error('Unsupported content type. Please provide a string (file path or plain string).');
+		}
+	}
 
-// // Call the function to render the template for client-side evaluation
-// const output = renderTemplate(`
-// <script>
-//         function runningInsideFigma() {
-//             return Math.random() > 0.5; // Returns true/false randomly for demo
-//         }
-// </script>
+	// Function to read the contents of a file, returns a promise
+	readFile(filePath) {
+		return new Promise((resolve, reject) => {
+			fs.readFile(filePath, 'utf-8', (err, data) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(data);
+				}
+			});
+		});
+	}
 
-// {#if (runningInsideFigma())}
-// 	<div>websocket-relay</div>
-// {:else}
-// 	<div>iframe-preview</div>
-// {/if}
-// `);
+	// Function to check if the string is a file path
+	isFilePath(content) {
+		return fs.existsSync(content) && fs.lstatSync(content).isFile();
+	}
 
-// Render include
-
-// const templateString = `
-// {include('header.html')}
-// <div>Main content here</div>
-// {include('footer.html')}`;
-
-// const templateString = `
-// <script>
-//         function runningInsideFigma() {
-//             return Math.random() > 0.5; // Returns true/false randomly for demo
-//         }
-// </script>
-
-// {#if runningInsideFigma()}
-// 	<% include('header.html') %>
-// {:else}
-// 	<% include('footer.html') %>
-// {/if}
-// `;
-
-
-const templateStringPath = path.join(__dirname, 'test/template-string.html');
-
-const templateString = fs.readFileSync(templateStringPath, 'utf8');
-
-const baseDir = path.join(__dirname, 'test');  // The base directory where files will be searched
-
-const renderedIncludes = renderInclude(templateString, baseDir)
-const output = renderLogicBlock(renderedIncludes)
-
-
-try {
-	// Create directory if it doesn't exist
-	await mkdir(dirPath, { recursive: true });
-
-	// Write file inside the newly created directory
-	await writeFile(filePath, output);
-	console.log('File has been written successfully inside the directory!');
-} catch (err) {
-	console.error('An error occurred:', err);
+	// Replace the placeholder function with your own logic
+	setRenderFunction(customFunction) {
+		this.placeholderFunction = customFunction;
+	}
 }
+
+export const wisp = new Wisp();

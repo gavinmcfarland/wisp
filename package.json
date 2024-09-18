@@ -4,8 +4,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "node index.js",
-    "test": "node index.js & serve -s dist"
+    "build": "node test/test.js",
+    "test": "node test/test.js & serve -s dist"
+  },
+  "exports": {
+    ".": "./index.js"
   },
   "keywords": [],
   "author": "",

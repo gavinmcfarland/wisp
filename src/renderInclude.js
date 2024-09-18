@@ -5,8 +5,7 @@ import path from 'path';
 let startDelimiter = '<%';
 let endDelimiter = '%>';
 
-export function renderInclude(inputString, baseDir) {
-
+export function renderInclude(inputString, baseDir = path.resolve('./')) {
 	// Escape delimiters for use in regular expressions
 	const escapeRegex = (str) => str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 	const escapedStart = escapeRegex(startDelimiter);
@@ -25,7 +24,7 @@ export function renderInclude(inputString, baseDir) {
 			const includeContent = fs.readFileSync(includePath, 'utf8');
 			return includeContent;
 		} catch (err) {
-			throw new Error(`Included file ${includeFile} not found`);
+			throw new Error(`Included file ${includeFile} not found in directory: ${includePath}`);
 		}
 	};
 
