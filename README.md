@@ -1,6 +1,6 @@
 # Wisp
 
-A lightweight templating language for HTML.
+Wisp is a lightweight templating language that outputs a string without requiring a bundler.
 
 > [!NOTE]
 > This is a work in progress and very experimental.
@@ -11,18 +11,15 @@ The example below uses reactive logic blocks to dynamically update content at ru
 
 ```html
 <script>
-  let showGreeting = true
+  let showGreeting = true;
 
   function changeGreeting() {
-    showGreeting = !showGreeting
+    showGreeting = !showGreeting;
   }
 </script>
 
 <button onclick="changeGreeting()">Change greeting</button>
 
-{#if showGreeting}
-    {include('hello.html')}
-    {:else}
-    {include('goodbye.html')}
+{#if showGreeting} {include('hello.html')} {:else} {include('goodbye.html')}
 {/if}
 ```
