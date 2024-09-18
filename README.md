@@ -41,8 +41,24 @@ The example below uses reactive logic blocks to dynamically update content at ru
 <button onclick="changeGreeting()">Change greeting</button>
 
 {#if showGreeting}
-    {include('hello.html')}
+  {include('hello.html')}
 {:else}
-    {include('goodbye.html')}
+  {include('goodbye.html')}
 {/if}
 ```
+
+### Features
+
+- `logic blocks`: Content can be conditionally rendered by wrapping it in an if block.
+
+  ```html
+  {#if timeForTea}
+  <p>Time for tea!</p>
+  {/if}
+  ```
+
+- `includes`: Content can be split into files for better organisation.
+
+  ```html
+  {include('about.html')}
+  ```
