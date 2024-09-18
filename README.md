@@ -5,7 +5,7 @@ Wisp is a lightweight templating language that outputs a string without requirin
 > [!NOTE]
 > This is a work in progress and very experimental.
 
-### Install
+### Install
 
 This is library has not been published to npm yet. So install it from github.
 
