@@ -7,7 +7,7 @@ Wisp is a lightweight templating language that outputs a string without requirin
 
 ### Install
 
-This is library has not been published to npm yet. So install it from github.
+This library has not been published to npm yet. So install it from github.
 
 ```shell
 npm install github:gavinmcfarland/wisp
@@ -40,10 +40,7 @@ The example below uses reactive logic blocks to dynamically update content at ru
 
 <button onclick="changeGreeting()">Change greeting</button>
 
-{#if showGreeting}
-  {include('hello.html')}
-{:else}
-  {include('goodbye.html')}
+{#if showGreeting} {include('hello.html')} {:else} {include('goodbye.html')}
 {/if}
 ```
 
