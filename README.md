@@ -1,6 +1,6 @@
-# Wisp
+# wisp
 
-Wisp is a lightweight reactive templating language. It's like if EJS, Handlebars and Svelte had a baby.
+Wisp is a lightweight reactive templating language. It's like if Handlebars, Svelte and EJS had a baby.
 
 > [!NOTE]
 > This is a work in progress and very experimental.
