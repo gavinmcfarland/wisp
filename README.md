@@ -1,39 +1,37 @@
 # Wisp
 
-Wisp is a lightweight templating language that outputs a string without requiring a bundler.
+Wisp is a lightweight reactive templating language. It's like if EJS, Handlebars and Svelte had a baby.
 
 > [!NOTE]
 > This is a work in progress and very experimental.
 
 ### Install
 
-This library has not been published to npm yet. So install it from github.
-
 ```shell
-npm install github:gavinmcfarland/wisp
+npm install github:gavinmcfarland/wisp --save-dev
 ```
 
-### Usage
+## Usage
 
 To use wisp, you just need to pass in a template string.
 
 ```js
 import { wisp } from "wisp";
 
-wisp.render(template, options).then((output) => {
-  console.log(output);
+wisp.render(template).then((output) => {
+    console.log(output);
 });
 ```
 
-The example below uses reactive logic blocks to dynamically update content at runtime. Content changes automatically when triggered by events, and 'includes' are used to reference external content for better modularity.
+### Example
 
 ```html
 <script>
-  let showGreeting = true;
+    let showGreeting = true;
 
-  function changeGreeting() {
-    showGreeting = !showGreeting;
-  }
+    function changeGreeting() {
+        showGreeting = !showGreeting;
+    }
 </script>
 
 <button onclick="changeGreeting()">Change greeting</button>
@@ -45,66 +43,74 @@ The example below uses reactive logic blocks to dynamically update content at ru
 {/if}
 ```
 
-### Options
+## Features
 
-Configure wisp with the following options.
+-   ### Render a template
 
-- `baseDir`: The path you want all includes to work from.
-- `helpers`: And array-like object of helper functions
+    `wisp.render(template: string | Path, opts?: Opts)`
 
-**Example**
+    #### Options
 
-```js
-const options = {
-  baseDir: path.join(__dirname, "includes"),
-  helpers: {
-    greeting: (name = "Guest") => `Hello, ${name}!`,
-    currentYear: () => new Date().getFullYear(),
-    uppercase: (input) => String(input).toUpperCase(),
-  },
-};
-```
+    ```ts
+    type Helper = (...args: any[]) => any;
 
-### Features
+    interface Opts {
+        baseDir: string;
+        helpers: {
+            [key: string]: Helper;
+        };
+    }
+    ```
 
-- `logic blocks`: Content can be conditionally rendered by wrapping it in an if block.
+    -   **`baseDir`** The path you want all includes to work from.
+    -   **`helpers`** And array-like object of helper functions
 
-  ```html
-  {#if timeForTea}
-  <p>Time for tea!</p>
-  {/if}
-  ```
+-   ### Logic blocks
 
-- `includes`: Content can be split into files for better organisation.
+    Content can be conditionally rendered by wrapping it in an if block.
 
-  ```html
-  { include('about.html') }
-  ```
+    ```html
+    {#if timeForTea}
+        <p>Time for tea!</p>
+    {/if}
+    ```
 
-- `rendered`: This only applies the code contained after the template has been rendered. <mark>experimental</mark>
+-   ### Logic blocks
 
-  ```html
-  <script>
-    {#rendered}
-        console.log(iframe)
-    {/rendered}
-  </script>
-  ```
+    Content can be split into files for better organisation.
 
-- `helpers`: Create your own helpers
+    ```html
+    { include('about.html') }
+    ```
 
-  ```html
-  <p>Copyright { thisYear() }</p>
-  ```
+-   ### Rendered block
 
-  They can be pipped as well.
+    Create your own helpers
 
-  ```html
-  <p>{ 'hello world' | uppercase}</p>
-  ```
+    ```html
+    <p>Copyright { thisYear() }</p>
+    ```
 
-  And applied to files.
+    They can be pipped as well.
 
-  ```html
-  <p>{ include('script.html') | escape }</p>
-  ```
+    ```html
+    <p>{ 'hello world' | uppercase}</p>
+    ```
+
+    And applied to files.
+
+    ```html
+    <p>{ include('script.html') | escape }</p>
+    ```
+
+-   ### Rendered block <mark>experimental</mark>
+
+    This only applies the code contained after the template has been rendered.
+
+    ```html
+    <script>
+        {#rendered}
+            console.log(iframe)
+        {/rendered}
+    </script>
+    ```
