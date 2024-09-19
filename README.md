@@ -5,7 +5,7 @@ Wisp is a lightweight reactive templating language. It's like if EJS, Handlebars
 > [!NOTE]
 > This is a work in progress and very experimental.
 
-### Install
+## Install
 
 ```shell
 npm install github:gavinmcfarland/wisp --save-dev
