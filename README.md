@@ -75,7 +75,7 @@ wisp.render(template).then((output) => {
     {/if}
     ```
 
--   ### Logic blocks
+-   ### Includes
 
     Content can be split into files for better organisation.
 
@@ -83,7 +83,7 @@ wisp.render(template).then((output) => {
     { include('about.html') }
     ```
 
--   ### Rendered block
+-   ### Helpers
 
     Create your own helpers.
 
