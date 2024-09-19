@@ -23,7 +23,7 @@ wisp.render(template).then((output) => {
 });
 ```
 
-### Example
+### Example template string
 
 ```html
 <script>
