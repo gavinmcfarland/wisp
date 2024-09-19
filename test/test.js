@@ -15,23 +15,27 @@ const baseDir = path.join(__dirname, 'figma/mock');  // The base directory where
 const dirPath = path.join(__dirname, 'dist');
 const filePath = path.join(dirPath, 'index.html');
 
-const helpers = {
-	// Helper that takes an input and returns a greeting
-	myHelper: (name = 'Guest') => `Hello, ${name}!`,
+const options = {
+	baseDir,
+	helpers: {
+		// Helper that takes an input and returns a greeting
+		myHelper: (name = 'Guest') => `Hello, ${name}!`,
 
-	// Helper without arguments
-	currentYear: () => new Date().getFullYear(),
+		// Helper without arguments
+		currentYear: () => new Date().getFullYear(),
 
-	// Helper used as a filter
-	uppercase: (input) => String(input).toUpperCase(),
+		// Helper used as a filter
+		uppercase: (input) => String(input).toUpperCase(),
 
-	test: (input) => String(input).toUpperCase(),
+		test: (input) => String(input).toUpperCase(),
+	}
 };
+
 
 (async () => {
 	try {
 
-		const output = await wisp.render(templateStringPath, baseDir, helpers);
+		const output = await wisp.render(templateStringPath, options);
 		// Create directory if it doesn't exist
 		await mkdir(dirPath, { recursive: true });
 

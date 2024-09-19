@@ -20,12 +20,10 @@ To use wisp, you just need to pass in a template string.
 ```js
 import { wisp } from "wisp";
 
-wisp.render(template).then((output) => {
+wisp.render(template, options).then((output) => {
   console.log(output);
 });
 ```
-
-### Example
 
 The example below uses reactive logic blocks to dynamically update content at runtime. Content changes automatically when triggered by events, and 'includes' are used to reference external content for better modularity.
 
@@ -47,6 +45,26 @@ The example below uses reactive logic blocks to dynamically update content at ru
 {/if}
 ```
 
+### Options
+
+Configure wisp with the following options.
+
+- `baseDir`: The path you want all includes to work from.
+- `helpers`: And array-like object of helper functions
+
+**Example**
+
+```js
+const options = {
+  baseDir: path.join(__dirname, "includes"),
+  helpers: {
+    greeting: (name = "Guest") => `Hello, ${name}!`,
+    currentYear: () => new Date().getFullYear(),
+    uppercase: (input) => String(input).toUpperCase(),
+  },
+};
+```
+
 ### Features
 
 - `logic blocks`: Content can be conditionally rendered by wrapping it in an if block.
@@ -65,28 +83,28 @@ The example below uses reactive logic blocks to dynamically update content at ru
 
 - `rendered`: This only applies the code contained after the template has been rendered. <mark>experimental</mark>
 
-    ```html
-    <script>
-        {#rendered}
-            console.log(iframe)
-        {/rendered}
-    </script>
+  ```html
+  <script>
+    {#rendered}
+        console.log(iframe)
+    {/rendered}
+  </script>
+  ```
 
 - `helpers`: Create your own helpers
 
-    ```html
-    <p>Copyright { thisYear() }</p>
-    ```
+  ```html
+  <p>Copyright { thisYear() }</p>
+  ```
 
-    They can be pipped as well.
+  They can be pipped as well.
 
-    ```html
-    <p>{ 'hello world' | uppercase}</p>
-    ```
+  ```html
+  <p>{ 'hello world' | uppercase}</p>
+  ```
 
-    And applied to files.
+  And applied to files.
 
-    ```html
-    <p>{ include('script.html') | escape }
-    ```
-
+  ```html
+  <p>{ include('script.html') | escape }</p>
+  ```
