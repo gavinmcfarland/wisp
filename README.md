@@ -85,7 +85,7 @@ wisp.render(template).then((output) => {
 
 -   ### Rendered block
 
-    Create your own helpers
+    Create your own helpers.
 
     ```html
     <p>Copyright { thisYear() }</p>
